@@ -915,7 +915,6 @@ class ReactExoplayerView extends FrameLayout implements
                 // Special case for decoder initialization failures.
                 MediaCodecRenderer.DecoderInitializationException decoderInitializationException =
                         (MediaCodecRenderer.DecoderInitializationException) cause;
-                if (decoderInitializationException.decoderName == null) {
                     if (decoderInitializationException.getCause() instanceof MediaCodecUtil.DecoderQueryException) {
                         errorString = getResources().getString(R.string.error_querying_decoders);
                     } else if (decoderInitializationException.secureDecoderRequired) {
@@ -925,10 +924,6 @@ class ReactExoplayerView extends FrameLayout implements
                         errorString = getResources().getString(R.string.error_no_decoder,
                                 decoderInitializationException.mimeType);
                     }
-                } else {
-                    errorString = getResources().getString(R.string.error_instantiating_decoder,
-                            decoderInitializationException.decoderName);
-                }
             }
         }
         else if (e.type == ExoPlaybackException.TYPE_SOURCE) {
