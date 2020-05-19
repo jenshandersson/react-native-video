@@ -101,7 +101,7 @@ export default class Video extends Component {
     this.setNativeProps({ fullscreen: false });
   };
 
-  save = async (options?) => {
+  save = async (options) => {
     return await NativeModules.VideoManager.save(options, findNodeHandle(this._root));
   }
 
@@ -271,7 +271,6 @@ export default class Video extends Component {
   render() {
     const resizeMode = this.props.resizeMode;
     const source = resolveAssetSource(this.props.source) || {};
-    const shouldCache = !source.__packager_asset;
 
     let uri = source.uri || '';
     if (uri && uri.match(/^\//)) {
@@ -306,7 +305,6 @@ export default class Video extends Component {
         uri,
         isNetwork,
         isAsset,
-        shouldCache,
         type: source.type || '',
         mainVer: source.mainVer || 0,
         patchVer: source.patchVer || 0,
