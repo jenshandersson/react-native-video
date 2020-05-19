@@ -111,6 +111,7 @@ static int const RCTVideoUnset = -1;
     _pictureInPicture = false;
     _ignoreSilentSwitch = @"inherit"; // inherit, ignore, obey
     _mixWithOthers = @"inherit"; // inherit, mix, duck
+    _player = [[AVPlayer alloc] init];
 #if TARGET_OS_IOS
     _restoreUserInterfaceForPIPStopCompletionHandler = NULL;
 #endif
@@ -345,7 +346,7 @@ static int const RCTVideoUnset = -1;
 - (void)setSrc:(NSDictionary *)source
 {
   _source = source;
-  [self removePlayerLayer];
+//  [self removePlayerLayer];
   [self removePlayerTimeObserver];
   [self removePlayerItemObservers];
 
@@ -369,8 +370,14 @@ static int const RCTVideoUnset = -1;
         [_player removeObserver:self forKeyPath:externalPlaybackActive context:nil];
         _isExternalPlaybackActiveObserverRegistered = NO;
       }
-        
-      _player = [AVPlayer playerWithPlayerItem:_playerItem];
+      
+      if (_playerLayerObserverSet) {
+        [_playerLayer removeObserver:self forKeyPath:readyForDisplayKeyPath];
+        _playerLayerObserverSet = NO;
+      }
+      
+      // Keep one player instance when switching source
+      [_player replaceCurrentItemWithPlayerItem:_playerItem];
       _player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
         
       [_player addObserver:self forKeyPath:playbackRate options:0 context:nil];
@@ -378,6 +385,9 @@ static int const RCTVideoUnset = -1;
       
       [_player addObserver:self forKeyPath:externalPlaybackActive options:0 context:nil];
       _isExternalPlaybackActiveObserverRegistered = YES;
+      
+      [_playerLayer addObserver:self forKeyPath:readyForDisplayKeyPath options:NSKeyValueObservingOptionNew context:nil];
+      _playerLayerObserverSet = YES;
         
       [self addPlayerTimeObserver];
       if (@available(iOS 10.0, *)) {
