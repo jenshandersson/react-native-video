@@ -11,6 +11,7 @@
 - Added `trackId` (Android ExoPlayer) - Configure an identifier for the video stream to link the playback context to the events emitted. (#1944)
 - Created a new example project that's simpler and easier to maintain. Removed iOS caching. [#2005](https://github.com/react-native-community/react-native-video/pull/2005)
 - Reverted the JS fullscreening for Android. [#2013](https://github.com/react-native-community/react-native-video/pull/2013)
+- Set iOS request headers without needing to edit RCTVideo.m. [#2014](https://github.com/react-native-community/react-native-video/pull/2014)
 
 ### Version 5.1.0-alpha5
 
