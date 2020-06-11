@@ -369,6 +369,11 @@ static int const RCTVideoUnset = -1;
         _isExternalPlaybackActiveObserverRegistered = NO;
       }
       
+      if (_playerLayerObserverSet) {
+        [_playerLayer removeObserver:self forKeyPath:readyForDisplayKeyPath];
+        _playerLayerObserverSet = NO;
+      }
+      
       // Keep one player instance when switching source
       [_player replaceCurrentItemWithPlayerItem:_playerItem];
       _player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
@@ -378,6 +383,9 @@ static int const RCTVideoUnset = -1;
       
       [_player addObserver:self forKeyPath:externalPlaybackActive options:0 context:nil];
       _isExternalPlaybackActiveObserverRegistered = YES;
+      
+      [_playerLayer addObserver:self forKeyPath:readyForDisplayKeyPath options:NSKeyValueObservingOptionNew context:nil];
+      _playerLayerObserverSet = YES;
         
       [self addPlayerTimeObserver];
       if (@available(iOS 10.0, *)) {
