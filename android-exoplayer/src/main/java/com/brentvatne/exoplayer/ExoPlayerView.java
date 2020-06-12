@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceView;
 import android.view.TextureView;
@@ -20,7 +19,6 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.text.Cue;
-import com.google.android.exoplayer2.text.TextRenderer;
 import com.google.android.exoplayer2.text.TextOutput;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.SubtitleView;
@@ -214,13 +212,8 @@ public final class ExoPlayerView extends FrameLayout {
 
         @Override
         public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-            boolean isInitialRatio = layout.getAspectRatio() == 0;
             layout.setAspectRatio(height == 0 ? 1 : (width * pixelWidthHeightRatio) / height);
-
-            // React native workaround for measuring and layout on initial load.
-            if (isInitialRatio) {
-                post(measureAndLayout);
-            }
+            post(measureAndLayout);
         }
 
         @Override
